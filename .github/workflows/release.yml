@@ -2,7 +2,7 @@ name: Test, Deploy, Release, Notify
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
 
 jobs:
   full-cycle:
@@ -15,19 +15,23 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "18"
+          node-version: '18'
 
       - name: Install clasp
         run: npm install -g @google/clasp
 
       - name: Authenticate clasp with credentials
-        run: printf '%s' "${{ secrets.CLASPRC_JSON }}" > ~/.clasprc.json
+        run: |
+          printf "%s" "${{ secrets.CLASPRC_JSON }}" > ~/.clasprc.json
 
       - name: Run Unit Tests
         run: clasp run runAllUnitTests || exit 1
 
       - name: Push to Google Apps Script
         run: clasp push
+
+      - name: Debug CLASPRC  
+        run: cat ~/.clasprc.json
 
       - name: Create ZIP and version tag
         id: versioning
