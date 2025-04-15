@@ -1,0 +1,83 @@
+
+name: Test, Deploy, Release, Notify
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  full-cycle:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
+    - name: Install clasp
+      run: npm install -g @google/clasp
+
+    - name: Authenticate clasp
+      run: echo "${{ secrets.CLASP_CREDENTIALS }}" > ~/.clasprc.json
+
+    - name: Run Unit Tests
+      run: clasp run runAllUnitTests || exit 1
+
+    - name: Push to Google Apps Script
+      run: clasp push
+
+    - name: Create ZIP and version tag
+      id: versioning
+      run: |
+        VERSION="v$(date +'%Y%m%d%H%M')"
+        echo "VERSION=$VERSION" >> $GITHUB_ENV
+        zip -r "$VERSION.zip" . -x "*.git*" "*.github*" "node_modules/*"
+        git tag "$VERSION"
+        git push origin "$VERSION"
+
+    - name: Create GitHub Release and upload ZIP
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: ${{ env.VERSION }}
+        name: Release ${{ env.VERSION }}
+        files: ${{ env.VERSION }}.zip
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+
+    - name: Notify via LINE with download button
+      run: |
+        curl -X POST https://api.line.me/v2/bot/message/push         -H 'Content-Type: application/json'         -H "Authorization: Bearer ${{ secrets.LINE_TOKEN }}"         -d '{
+              "to": "C700cb65af2b4bcfafa5c61e2ae567f67",
+              "messages": [{
+                "type": "flex",
+                "altText": "Deploy สำเร็จ 🎉 พร้อมดาวน์โหลด ZIP",
+                "contents": {
+                  "type": "bubble",
+                  "body": {
+                    "type": "box",
+                    "layout": "vertical",
+                    "contents": [
+                      {
+                        "type": "text",
+                        "text": "✅ Deploy & Release สำเร็จ",
+                        "weight": "bold",
+                        "size": "lg"
+                      },
+                      {
+                        "type": "button",
+                        "style": "primary",
+                        "action": {
+                          "type": "uri",
+                          "label": "📦 ดาวน์โหลด ZIP",
+                          "uri": "https://github.com/niyata/palication-gas-git/releases/tag/${{ env.VERSION }}"
+                        }
+                      }
+                    ]
+                  }
+                }
+              }]
+            }'
