@@ -1,0 +1,26 @@
+{
+  "name": "palication-gas-git",
+  "version": "1.0.0",
+  "description": "This is a ready-to-use VS Code workspace configured for Google Apps Script development using `clasp`.",
+  "main": "gas-tap.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/niyata/palication-gas-git.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/niyata/palication-gas-git/issues"
+  },
+  "homepage": "https://github.com/niyata/palication-gas-git#readme",
+  "devDependencies": {
+    "eslint": "^9.24.0"
+  }
+}

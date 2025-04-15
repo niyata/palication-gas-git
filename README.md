@@ -1,11 +1,17 @@
-# Pali GAS Exporter
+# Google Apps Script Dev Template
 
-ระบบแยกและแปลงไฟล์ตำราบาลีจาก PDF เป็น JSON/SQL พร้อมส่ง Flex Message ผ่าน LINE OA
+This is a ready-to-use VS Code workspace configured for Google Apps Script development using `clasp`.
 
-## คำสั่งสำคัญ
-- `clasp push`  → ส่งโค้ดทั้งหมดขึ้น GAS
-- `clasp pull`  → ดึงโค้ดจาก GAS ลงเครื่อง
-- `./deploy.sh` → คำสั่งลัดสำหรับ deploy
+## Features
+- `.gs` file support with JavaScript highlighting
+- Pre-configured ESLint rules for GAS
+- Prettier formatting on save
+- `.clasp.json` placeholder included
+- Workspace trust and SpellRight configured
 
-## ไม่ควร commit
-- `.clasp.json` (เก็บ Token และ Script ID เฉพาะผู้ใช้)
+## Usage
+1. Replace `"scriptId"` in `.clasp.json` with your actual script ID.
+2. Start writing `.gs` files. Save to auto-format.
+3. Use `clasp push` to deploy to Google Apps Script.
+
+Happy coding ✨
