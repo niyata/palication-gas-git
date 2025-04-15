@@ -22,7 +22,8 @@ jobs:
 
       - name: Authenticate clasp with credentials
         run: |
-          printf "%s" "${{ secrets.CLASPRC_JSON }}" > ~/.clasprc.json
+          printf "%s" "${{ secrets.CLASPRC_JSON }}" > ~/.clasprc.json 
+          cat ~/.clasprc.json # (debug) ยืนยันว่าไฟล์ออกมาถูกต้อง
 
       - name: Run Unit Tests
         run: clasp run runAllUnitTests || exit 1
