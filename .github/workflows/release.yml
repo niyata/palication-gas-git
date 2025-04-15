@@ -21,7 +21,8 @@ jobs:
         run: npm install -g @google/clasp
 
       - name: Authenticate clasp with credentials
-        run: echo '${{ secrets.CLASPRC_JSON }}' > ~/.clasprc.json
+        run: |
+          printf "%s" "${{ secrets.CLASPRC_JSON }}" > ~/.clasprc.json
 
       - name: Run Unit Tests
         run: clasp run runAllUnitTests || exit 1
